@@ -1,0 +1,1 @@
+suds-community==0.8.3
