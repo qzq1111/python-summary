@@ -1,7 +1,14 @@
+"""
+定义las1.0~1.4的公共头数据类。
+根据不同的版本调用不同类来解析文件
+"""
 import struct
 
 
 class OneZeroHeader(object):
+    """
+    1.0版本
+    """
 
     def __init__(self):
         self.file_signature = None  # 文件签名
@@ -77,6 +84,9 @@ class OneZeroHeader(object):
 
 
 class OneOneHeader(object):
+    """
+    1.1版本
+    """
 
     def __init__(self):
         self.file_signature = None  # 文件签名
@@ -149,6 +159,10 @@ class OneOneHeader(object):
 
 
 class OneTwoHeader(object):
+    """
+    1.2版本
+    """
+
     def __init__(self):
         self.file_signature = None  # 文件签名
         self.file_source_id = None  # 文件ID
@@ -220,6 +234,10 @@ class OneTwoHeader(object):
 
 
 class OneThreeHeader(object):
+    """
+    1.3版本
+    """
+
     def __init__(self):
         self.file_signature = None  # 文件签名
         self.file_source_id = None  # 文件ID
@@ -293,6 +311,9 @@ class OneThreeHeader(object):
 
 
 class OneFourHeader(object):
+    """
+    1.4版本
+    """
 
     def __init__(self):
         self.file_signature = None  # 文件签名
@@ -334,6 +355,7 @@ class OneFourHeader(object):
         self.number_of_points_by_return = None  # 回波点数量
 
     def read_header(self, f):
+        f.seek(0)
         self.file_signature = f.read(4).decode("utf-8")
         self.file_source_id = struct.unpack('H', f.read(2))[0]
         self.global_encoding = struct.unpack('H', f.read(2))[0]
@@ -373,16 +395,19 @@ class OneFourHeader(object):
         self.number_of_points_by_return = struct.unpack('15Q', f.read(120))[0]
 
 
-def head(version):
+def get_header(f, version):
     if version == (1, 0):
-        return OneZeroHeader()
+        new_header = OneZeroHeader()
     elif version == (1, 1):
-        return OneOneHeader()
+        new_header = OneOneHeader()
     elif version == (1, 2):
-        return OneTwoHeader()
+        new_header = OneTwoHeader()
     elif version == (1, 3):
-        return OneThreeHeader()
+        new_header = OneThreeHeader()
     elif version == (1, 4):
-        return OneFourHeader()
+        new_header = OneFourHeader()
     else:
-        return False
+        raise Exception("未找到对应文件版本")
+
+    new_header.read_header(f)
+    return new_header
