@@ -1,4 +1,6 @@
 import struct
+import time
+
 from las.head import get_header
 from las.point import Point
 
@@ -22,14 +24,19 @@ if __name__ == '__main__':
                    header.x_offset,
                    header.y_offset,
                    header.z_offset,
-                   )
+                   header.point_data_record_format,
 
-    data = points.read_point(f, header.offset_to_point_data,
-                             header.point_data_record_format,
-                             header.number_of_point_records)
+                   )
+    print("开始测试读取点数据")
+    write_start = time.time()
+    data = points.read_point(f,
+                             header.offset_to_point_data,
+                             header.number_of_point_records,
+                             )
 
     f.close()
+    write_end = time.time()
 
     with open("point.txt", 'a+') as f:
-        for item in data:
-            f.write(f'{item[0]},{item[1]},{item[2]}\n')
+        f.writelines(data)
+    print(f"完成消耗时间:{write_end - write_start}")
