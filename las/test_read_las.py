@@ -1,6 +1,13 @@
+"""
+使用须知：
+1. las点云文件格式文档地址：https://www.asprs.org/divisions-committees/lidar-division/laser-las-file-format-exchange-activities
+2. 可以使用包laspy文档地址：https://github.com/laspy/laspy
+3. 可以使用包plcpy文档地址：https://github.com/davidcaron/pclpy
+4. 具体需求，具体使用。
+"""
+# coding:utf-8
 import struct
 import time
-
 from las.head import get_header
 from las.point import Point
 
